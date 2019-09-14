@@ -1,0 +1,123 @@
+---
+title: "Visual story telling part 2: flights at ABIA"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,echo=FALSE,warning=FALSE,include=FALSE}
+rm(list=ls())
+library(tidyverse)
+library(ggplot2)
+library(xts)
+library(fpp)
+library(ggmap)
+library(dplyr)
+library(plyr)
+library(reshape2)
+library(egg)
+options(warn=-1)
+```
+
+```{r,echo=FALSE}
+Airport=read.csv("~/Desktop/ABIA.csv")
+```
+
+```{r,include=FALSE}
+#Removing the outliers 
+Airport=Airport[-c(60414,98309),]
+```
+
+```{r,include=FALSE}
+AUSdeps=Airport[Airport$Origin=="AUS",]
+AUSdeps_counts=count(AUSdeps,'Dest')
+AUSdeps2 <- AUSdeps_counts[order(-AUSdeps_counts$freq),] 
+AUSdepsplot=AUSdeps2[AUSdeps2$freq>700,]
+```
+
+```{r,include=FALSE}
+AUSdepsplot$Dest <- factor(AUSdepsplot$Dest, levels = AUSdepsplot$Dest[order(-AUSdepsplot$freq)])
+
+Top_Destinations=ggplot(AUSdepsplot,aes(Dest,y=freq))+
+  geom_col(na.rm=TRUE,color="red",fill="blue")+
+  labs(x="Destinations",y="Total flights in 2008",title="Top Destinations from Austin in 2008")+
+  theme(panel.background = element_blank(),
+                  panel.grid.minor = element_blank(),
+                  axis.ticks  = element_blank(),
+                  axis.line   = element_line(colour=NA),
+                  axis.line.x = element_line(colour="grey80")) 
+```
+```{r,echo=FALSE}
+AUSdepsDAL=AUSdeps[AUSdeps$Dest=="DAL",]
+AUSdepsDFW=AUSdeps[AUSdeps$Dest=="DFW",]
+AUSdepsIAH=AUSdeps[AUSdeps$Dest=="IAH",]
+AUSdepsPHX=AUSdeps[AUSdeps$Dest=="PHX",]
+AUSdepsDEN=AUSdeps[AUSdeps$Dest=="DEN",]
+TopAUSdeps=rbind(AUSdepsDAL,AUSdepsDFW,AUSdepsIAH,AUSdepsPHX,AUSdepsDEN,deparse.level = 1)
+```
+
+```{r,echo=FALSE}
+Topdep=ggplot(TopAUSdeps,aes(y=ArrDelay,x=factor(DayOfWeek),fill=factor(DayOfWeek)))+
+  geom_bar(stat="identity",position = "dodge",na.rm=TRUE)+
+  facet_grid(factor(TopAUSdeps$Dest) ~ .)+
+  coord_flip()+
+  labs(y="Arrival Delay (minutes)",x="Day of the Week",title="Arrival Delay per Day of the Week",subtitle="Data for Top 5 destinations from Austin")
+
+ArrDelPerDay = Topdep + scale_fill_manual(breaks=c("1", "2", "3","4","5","6","7"),values=c("grey46", "red", "grey46", "grey46", "grey46", "grey46", "grey46"), labels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),name="Day Of the Week")
+```
+
+### We are going to try to find the day with the most arrival delays for flights from Austin Airport. First we will find the Top 5 Destinations from Austin for 2008. 
+```{r,echo=FALSE}
+Reasons=TopAUSdeps[TopAUSdeps$DayOfWeek==2,]
+Reasons=Reasons[complete.cases(Reasons),]
+DF=Reasons[,c(15,18,25:29)]
+DF2=gather(DF,event,total,CarrierDelay:LateAircraftDelay)
+
+Causes=ggplot(DF2,aes(Dest,total,fill=event))+
+  geom_bar(stat="identity",position="fill",na.rm=TRUE)+
+  theme_classic()+
+  labs(title="Causes of Arrival Delays on Tuesdays",subtitle="Data for Top 5 Destinations from Austin",x="Destination",y="Total Delay Causes (Percentages)")+
+  scale_fill_manual(values=c("red", "green", "blue", "yellow", "brown"),name="Cause of Delay")
+```
+```{r,echo=FALSE}
+Top_Destinations
+```
+
+
+
+
+
+
+
+
+### For each of these 5 destinations we will find the arrival delay per day for each different destination. 
+```{r,echo=FALSE}
+ArrDelPerDay
+```
+
+
+
+
+
+
+
+
+
+
+
+### The majority of delays are on Tuesday for 3/5 destinations. Since this is a surprising insight lets find out why Tuesdays have the most delays for all 5 of the destinations. 
+```{r,echo=FALSE}
+Causes
+```
+
+
+
+
+
+
+
+### Most delays at these airports are because of late aircraft. If you are flying from Austin to DAL, DFW, or IAH (all in Texas) don't fly on a Tuesday if you don't want to risk being late. 
+
+
