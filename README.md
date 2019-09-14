@@ -9,7 +9,9 @@ Visual story telling part 2: flights at ABIA
 Consider the data in ABIA.csv, which contains information on every commercial flight in 2008 that either departed from or landed at Austin-Bergstrom Interational Airport. The variable codebook is as follows:
 
 Year all 2008
+
 Month 1-12
+
 DayofMonth 1-31
 DayOfWeek 1 (Monday) - 7 (Sunday)
 DepTime actual departure time (local, hhmm)
