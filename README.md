@@ -6,11 +6,11 @@ Visuals provide information on delays to the top 5 destinations from the Austin 
 
 Results:
 
-![Top Destinations]("Top%20Destinations%20from%20AUS.png")
+![Top Destinations](Top%20Destinations%20from%20AUS.png)
 
-![Delays]("Arrival%20Delay%20per%20Day.png")
+![Delays](Arrival%20Delay%20per%20Day.png)
 
-![Delay Causes]("Delay%20Causes.png")
+![Delay Causes](Delay%20Causes.png)
 
 Visual story telling part 2: flights at ABIA
 
