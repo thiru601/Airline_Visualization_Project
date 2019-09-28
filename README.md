@@ -4,6 +4,14 @@ Airline Route Visualization Project for Predictive Modeling
 
 Visuals provide information on delays to the top 5 destinations from the Austin International Airport (AUS) in 2008. 
 
+Results:
+
+![Top Destinations](Top Destinations from AUS.png)
+
+![Delays](Arrival Delay per Day.png)
+
+![Delay Causes](Delay Causes.png)
+
 Visual story telling part 2: flights at ABIA
 
 Consider the data in ABIA.csv, which contains information on every commercial flight in 2008 that either departed from or landed at Austin-Bergstrom Interational Airport. The variable codebook is as follows:
